@@ -1,54 +1,3 @@
-/*
-ESP32-CAM MULTI-PERSON POSE Estimation
-Open the page in Chrome.
-
-http://APIP/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
-http://STAIP/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
-
-IP predefinido do AP： 192.168.4.1
-http://192.168.xxx.xxx/control?ip
-http://192.168.xxx.xxx/control?mac
-http://192.168.xxx.xxx/control?restart
-http://192.168.xxx.xxx/control?flash=value        //value= 0~255
-  
-IP do cliente de consulta：
-IP de consulta：http://192.168.4.1/?ip
-Redefinir rede：http://192.168.4.1/?resetwifi=ssid;password
-
-http://192.168.xxx.xxx             //網頁首頁管理介面
-http://192.168.xxx.xxx:81/stream   //取得串流影像
-http://192.168.xxx.xxx/capture     //取得影像
-http://192.168.xxx.xxx/status      //取得視訊參數值
-
-http://192.168.xxx.xxx/control?var=framesize&val=value    // value = 10->UXGA(1600x1200), 9->SXGA(1280x1024), 8->XGA(1024x768) ,7->SVGA(800x600), 6->VGA(640x480), 5 selected=selected->CIF(400x296), 4->QVGA(320x240), 3->HQVGA(240x176), 0->QQVGA(160x120)
-http://192.168.xxx.xxx/control?var=quality&val=value    // value = 10 ~ 63
-http://192.168.xxx.xxx/control?var=brightness&val=value    // value = -2 ~ 2
-http://192.168.xxx.xxx/control?var=contrast&val=value    // value = -2 ~ 2
-http://192.168.xxx.xxx/control?var=saturation&val=value    // value = -2 ~ 2 
-http://192.168.xxx.xxx/control?var=gainceiling&val=value    // value = 0 ~ 6
-http://192.168.xxx.xxx/control?var=colorbar&val=value    // value = 0 or 1
-http://192.168.xxx.xxx/control?var=awb&val=value    // value = 0 or 1 
-http://192.168.xxx.xxx/control?var=agc&val=value    // value = 0 or 1 
-http://192.168.xxx.xxx/control?var=aec&val=value    // value = 0 or 1 
-http://192.168.xxx.xxx/control?var=hmirror&val=value    // value = 0 or 1 
-http://192.168.xxx.xxx/control?var=vflip&val=value    // value = 0 or 1 
-http://192.168.xxx.xxx/control?var=awb_gain&val=value    // value = 0 or 1 
-http://192.168.xxx.xxx/control?var=agc_gain&val=value    // value = 0 ~ 30
-http://192.168.xxx.xxx/control?var=aec_value&val=value    // value = 0 ~ 1200
-http://192.168.xxx.xxx/control?var=aec2&val=value    // value = 0 or 1 
-http://192.168.xxx.xxx/control?var=dcw&val=value    // value = 0 or 1 
-http://192.168.xxx.xxx/control?var=bpc&val=value    // value = 0 or 1 
-http://192.168.xxx.xxx/control?var=wpc&val=value    // value = 0 or 1 
-http://192.168.xxx.xxx/control?var=raw_gma&val=value    // value = 0 or 1 
-http://192.168.xxx.xxx/control?var=lenc&val=value    // value = 0 or 1 
-http://192.168.xxx.xxx/control?var=special_effect&val=value    // value = 0 ~ 6
-http://192.168.xxx.xxx/control?var=wb_mode&val=value    // value = 0 ~ 4
-http://192.168.xxx.xxx/control?var=ae_level&val=value    // value = -2 ~ 2  
-*/
-/*
-const char* ssid = "Multilaser_2.4G_39C8D0";
-const char* password = "12345678";
-]**/
 const char* ssid = "Ariel";
 const char* password = "arielariel";
 
@@ -149,7 +98,7 @@ static int ra_filter_run(ra_filter_t * filter, int value){
 // WARNING!!! Make sure that you have either selected ESP32 Wrover Module,
 //            or another board which has PSRAM enabled
 
-//安可信ESP32-CAM模組腳位設定
+
 #define PWDN_GPIO_NUM     32
 #define RESET_GPIO_NUM    -1
 #define XCLK_GPIO_NUM      0
@@ -169,13 +118,12 @@ static int ra_filter_run(ra_filter_t * filter, int value){
 #define PCLK_GPIO_NUM     22
 
 void setup() {
-  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  //關閉電源不穩就重開機的設定
+  WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);  
   
   Serial.begin(115200);
-  Serial.setDebugOutput(true);  //開啟診斷輸出
+  Serial.setDebugOutput(true);  
   Serial.println();
-
-  //視訊組態設定
+  
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -196,8 +144,8 @@ void setup() {
   config.pin_pwdn = PWDN_GPIO_NUM;
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
-  //https://github.com/espressif/esp32-camera/blob/master/driver/include/sensor.h
-  config.pixel_format = PIXFORMAT_JPEG;    //影像格式：RGB565|YUV422|GRAYSCALE|JPEG|RGB888|RAW|RGB444|RGB555
+  
+  config.pixel_format = PIXFORMAT_JPEG;    //Formato de imagem：RGB565|YUV422|GRAYSCALE|JPEG|RGB888|RAW|RGB444|RGB555
   //init with high specs to pre-allocate larger buffers
   if(psramFound()){
     config.frame_size = FRAMESIZE_UXGA;
@@ -209,7 +157,7 @@ void setup() {
     config.fb_count = 1;
   }
   
-  //視訊初始化
+  
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
     Serial.printf("Camera init failed with error 0x%x", err);
@@ -217,20 +165,18 @@ void setup() {
     ESP.restart();
   }
 
-  //可動態改變視訊框架大小(解析度大小)
+  //tamanho da resolução
   sensor_t * s = esp_camera_sensor_get();
   s->set_framesize(s, FRAMESIZE_QVGA);  //UXGA|SXGA|XGA|SVGA|VGA|CIF|QVGA|HQVGA|QQVGA
 
-  //閃光燈(GPIO4)
+  //Flash (GPIO4)
   ledcAttachPin(4, 4);  
   ledcSetup(4, 5000, 8);
   
-  WiFi.mode(WIFI_AP_STA);  //其他模式 WiFi.mode(WIFI_AP); WiFi.mode(WIFI_STA);
+  WiFi.mode(WIFI_AP_STA);  
 
-  //指定Client端靜態IP
-  //WiFi.config(IPAddress(192, 168, 201, 100), IPAddress(192, 168, 201, 2), IPAddress(255, 255, 255, 0));
-
-  WiFi.begin(ssid, password);    //執行網路連線
+ 
+  WiFi.begin(ssid, password);    
 
   delay(1000);
   Serial.println("");
@@ -240,16 +186,16 @@ void setup() {
   long int StartTime=millis();
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    if ((StartTime+10000) < millis()) break;    //等待10秒連線
+    if ((StartTime+10000) < millis()) break;    //Aguarde 10 segundos para conectar
   } 
 
-  if (WiFi.status() == WL_CONNECTED) {    //若連線成功
-    WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   //設定SSID顯示客戶端IP         
+  if (WiFi.status() == WL_CONNECTED) {    //conexao bem sucedida
+    WiFi.softAP((WiFi.localIP().toString()+"_"+(String)apssid).c_str(), appassword);   // Defina o SSID para exibir o IP do cliente     
     Serial.println("");
     Serial.println("STAIP address: ");
     Serial.println(WiFi.localIP()); 
 
-    for (int i=0;i<5;i++) {   //若連上WIFI設定閃光燈快速閃爍
+    for (int i=0;i<5;i++) {   // Se estiver conectado ao WIFI, o flash para piscar rapidamente
       ledcWrite(4,10);
       delay(200);
       ledcWrite(4,0);
@@ -259,23 +205,21 @@ void setup() {
   else {
     WiFi.softAP((WiFi.softAPIP().toString()+"_"+(String)apssid).c_str(), appassword);    
 
-    for (int i=0;i<2;i++) {    //若連不上WIFI設定閃光燈慢速閃爍
+    for (int i=0;i<2;i++) {    // Se você não conseguir se conectar ao WIFI, o flash para piscar lentamente
       ledcWrite(4,10);
       delay(1000);
       ledcWrite(4,0);
       delay(1000);    
     }      
   }     
-
-  //指定AP端IP
-  //WiFi.softAPConfig(IPAddress(192, 168, 4, 1), IPAddress(192, 168, 4, 1), IPAddress(255, 255, 255, 0)); 
+ 
   Serial.println("");
   Serial.println("APIP address: ");
   Serial.println(WiFi.softAPIP());    
   
   startCameraServer(); 
 
-  //設定閃光燈為低電位
+
   pinMode(4, OUTPUT);
   digitalWrite(4, LOW);      
 }
@@ -296,7 +240,7 @@ static size_t jpg_encode_stream(void * arg, size_t index, const void* data, size
     return len;
 }
 
-//影像截圖
+// Captura de imagem
 static esp_err_t capture_handler(httpd_req_t *req){
     camera_fb_t * fb = NULL;
     esp_err_t res = ESP_OK;
@@ -366,7 +310,7 @@ static esp_err_t capture_handler(httpd_req_t *req){
     return res;
 }
 
-//影像串流
+//Transmissão de vídeo
 static esp_err_t stream_handler(httpd_req_t *req){
     camera_fb_t * fb = NULL;
     esp_err_t res = ESP_OK;
@@ -477,12 +421,12 @@ static esp_err_t stream_handler(httpd_req_t *req){
     return res;
 }
 
-//指令參數控制
+// Controle de parâmetros de instrução
 static esp_err_t cmd_handler(httpd_req_t *req){
-    char*  buf;  //存取網址後帶的參數字串
+    char*  buf;  //Sequência de parâmetros após acessar o URL
     size_t buf_len;
-    char variable[128] = {0,};  //存取參數var值
-    char value[128] = {0,};  //存取參數val值
+    char variable[128] = {0,};  //Parâmetro de acesso valor var
+    char value[128] = {0,};  //Parâmetro de acesso val
     String myCmd = "";
 
     buf_len = httpd_req_get_url_query_len(req) + 1;
@@ -509,9 +453,9 @@ static esp_err_t cmd_handler(httpd_req_t *req){
     Feedback="";Command="";cmd="";P1="";P2="";P3="";P4="";P5="";P6="";P7="";P8="";P9="";
     ReceiveState=0,cmdState=1,strState=1,questionstate=0,equalstate=0,semicolonstate=0;     
     if (myCmd.length()>0) {
-      myCmd = "?"+myCmd;  //網址後帶的參數字串轉換成自訂參數格式
+      myCmd = "?"+myCmd;  //A sequência de parâmetros após o URL ser convertido em um formato de parâmetro personalizado
       for (int i=0;i<myCmd.length();i++) {
-        getCommand(char(myCmd.charAt(i)));  //拆解參數字串
+        getCommand(char(myCmd.charAt(i)));  // Derrubar a sequência de parâmetros
       }
     }
 
@@ -521,23 +465,23 @@ static esp_err_t cmd_handler(httpd_req_t *req){
       Serial.println("cmd= "+cmd+" ,P1= "+P1+" ,P2= "+P2+" ,P3= "+P3+" ,P4= "+P4+" ,P5= "+P5+" ,P6= "+P6+" ,P7= "+P7+" ,P8= "+P8+" ,P9= "+P9);
       Serial.println(""); 
 
-      //自訂指令區塊  http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
+      //Bloco de instruções personalizadas  http://192.168.xxx.xxx/control?cmd=P1;P2;P3;P4;P5;P6;P7;P8;P9
       if (cmd=="your cmd") {
-        // You can do anything
-        // Feedback="<font color=\"red\">Hello World</font>";   //可為一般文字或HTML語法
+        // Você pode fazer qualquer coisa
+        // Feedback="<font color=\"red\">Hello World</font>";   //Pode ser texto sem formatação ou sintaxe HTML
       }
-      else if (cmd=="ip") {  //查詢IP
+      else if (cmd=="ip") { 
         Feedback="AP IP: "+WiFi.softAPIP().toString();    
         Feedback+=", ";
         Feedback+="STA IP: "+WiFi.localIP().toString();
       }  
-      else if (cmd=="mac") {  //查詢MAC
+      else if (cmd=="mac") {  
         Feedback="STA MAC: "+WiFi.macAddress();
       }  
-      else if (cmd=="restart") {  //重設WIFI連線
+      else if (cmd=="restart") {  //Redefinir conexão WIFI
         ESP.restart();
       }           
-      else if (cmd=="flash") {  //控制內建閃光燈
+      else if (cmd=="flash") {  //Controlando o flash embutido
         ledcAttachPin(4, 4);  
         ledcSetup(4, 5000, 8);   
          
@@ -548,14 +492,14 @@ static esp_err_t cmd_handler(httpd_req_t *req){
         Feedback="Command is not defined";
       }
 
-      if (Feedback=="") Feedback=Command;  //若沒有設定回傳資料就回傳Command值
+      if (Feedback=="") Feedback=Command;  //Se nenhum dado for definido, o valor do comando será retornado.
     
       static char response[15000];
       char * p = response;
       p+=sprintf(p, "%s", Feedback.c_str());   
       *p++ = 0;
-      httpd_resp_set_type(req, "text/html");  //設定回傳資料格式
-      httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");  //允許跨網域讀取
+      httpd_resp_set_type(req, "text/html");  //Formate os dados de postagem
+      httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");  //Permitir leitura entre domínios
       return httpd_resp_send(req, response, strlen(response));
     } 
     else {
@@ -563,7 +507,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
       sensor_t * s = esp_camera_sensor_get();
       int res = 0;
 
-      //官方指令區塊，也可在此自訂指令  http://192.168.xxx.xxx/control?var=xxx&val=xxx
+      //Bloco de instruções oficiais ou instruções personalizadas aqui  http://192.168.xxx.xxx/control?var=xxx&val=xxx
       if(!strcmp(variable, "framesize")) {
         if(s->pixformat == PIXFORMAT_JPEG) 
           res = s->set_framesize(s, (framesize_t)val);
@@ -607,7 +551,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
         *p++ = 0;
         httpd_resp_set_type(req, "text/html");
         httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-        return httpd_resp_send(req, response, strlen(response));  //回傳參數字串
+        return httpd_resp_send(req, response, strlen(response));  //Retornar string de parâmetro
       }
       else {
         httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
@@ -616,7 +560,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
     }
 }
 
-//顯示視訊參數狀態(須回傳json格式)
+// Exibir status do parâmetro de vídeo (deve retornar o formato json)
 static esp_err_t status_handler(httpd_req_t *req){
     static char json_response[1024];
 
@@ -656,7 +600,7 @@ static esp_err_t status_handler(httpd_req_t *req){
     return httpd_resp_send(req, json_response, strlen(json_response));
 }
 
-//自訂網頁首頁
+//Página inicial personalizada
 static const char PROGMEM INDEX_HTML[] = R"rawliteral(<!doctype html>
 <html>
     <head>
@@ -1305,8 +1249,8 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(<!doctype html>
           var rightAnkleLeft = Number(rightAnkle[3]);
           var rightAnkleTop = Number(rightAnkle[4]);
           /*            
-            //可以在這區塊做姿態判定控制開關或繼電器
-            if (mirrorimage==1) {  //使用鏡像時
+            //Você pode fazer interruptores ou relés de controle de determinação de atitude neste bloco
+            if (mirrorimage==1) {  //Ao usar o espelhamento
               if (開燈條件) {
                 if (document.getElementById("state").innerHTML == "OFF") {
                   document.getElementById("state").innerHTML = "ON";
@@ -1319,7 +1263,7 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(<!doctype html>
                 }
               }
             }
-            else {  //未使用鏡像時
+            else {  //Quando o espelhamento não é usado
               if (開燈條件) {
                 if (document.getElementById("state").innerHTML == "OFF") {
                   document.getElementById("state").innerHTML = "ON";
@@ -1378,16 +1322,16 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(<!doctype html>
 </html>
 )rawliteral";
 
-//網頁首頁   http://192.168.xxx.xxx
+//Página inicial   http://192.168.xxx.xxx
 static esp_err_t index_handler(httpd_req_t *req){
     httpd_resp_set_type(req, "text/html");
     return httpd_resp_send(req, (const char *)INDEX_HTML, strlen(INDEX_HTML));
 }
 
 void startCameraServer(){
-  httpd_config_t config = HTTPD_DEFAULT_CONFIG();  //可在HTTPD_DEFAULT_CONFIG()中設定Server Port
+  httpd_config_t config = HTTPD_DEFAULT_CONFIG();  //A porta do servidor pode ser configurada em HTTPD_DEFAULT_CONFIG ()
 
-  //可自訂網址路徑
+  //Caminho de URL personalizável
   //http://192.168.xxx.xxx/
   httpd_uri_t index_uri = {
       .uri       = "/",
@@ -1432,7 +1376,7 @@ void startCameraServer(){
   
   Serial.printf("Starting web server on port: '%d'\n", config.server_port);  //Server Port
   if (httpd_start(&camera_httpd, &config) == ESP_OK) {
-      //註冊自訂網址路徑對應執行的函式
+      //Registre um caminho de URL personalizado para executar a função
       httpd_register_uri_handler(camera_httpd, &index_uri);
       httpd_register_uri_handler(camera_httpd, &cmd_uri);
       httpd_register_uri_handler(camera_httpd, &status_uri);
@@ -1447,7 +1391,7 @@ void startCameraServer(){
   }
 }
 
-//拆解命令字串置入變數
+//Sequência de comandos de desmontagem na variável
 void getCommand(char c)
 {
   if (c=='?') ReceiveState=1;
