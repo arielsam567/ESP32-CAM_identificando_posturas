@@ -1,9 +1,3 @@
-const char* ssid = "Ariel";
-const char* password = "arielariel";
-
-const char* apssid = "ESP32-CAM";
-const char* appassword = "12345678";        
-
 #include <WiFi.h>
 #include <esp32-hal-ledc.h>      
 #include "esp_camera.h"          
@@ -20,9 +14,14 @@ const char* appassword = "12345678";
 #include "fd_forward.h"
 #include "fr_forward.h"
 
+const char* ssid = "Ariel";            //Nome da sua rede wifi
+const char* password = "arielariel";   //Senha da sua rede wifi
+
+const char* apssid = "ESP32-CAM";      //Nome da rede wifi que será criada
+const char* appassword = "12345678";   //Senha da rede wifi que será criada  
+
+
 String Feedback="";   
-
-
 String Command="";
 String cmd="";
 String P1="";
